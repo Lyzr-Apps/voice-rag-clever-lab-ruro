@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
-import Sidebar from './sections/Sidebar'
+import Sidebar, { LANGUAGES } from './sections/Sidebar'
 import ChatScreen, { type ChatMessage } from './sections/ChatScreen'
 import HistoryScreen, { type ConversationRecord } from './sections/HistoryScreen'
 import KnowledgeScreen from './sections/KnowledgeScreen'
@@ -170,6 +170,7 @@ export default function Page() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [conversations, setConversations] = useState<ConversationRecord[]>([])
   const [sampleMode, setSampleMode] = useState(false)
+  const [selectedLanguage, setSelectedLanguage] = useState('en')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -237,6 +238,8 @@ export default function Page() {
           activeScreen={activeScreen}
           onScreenChange={setActiveScreen}
           voiceStatus={voiceStatus}
+          selectedLanguage={selectedLanguage}
+          onLanguageChange={setSelectedLanguage}
         />
 
         <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
@@ -253,6 +256,9 @@ export default function Page() {
                 <div className={cn('w-2 h-2 rounded-full', voiceStatus !== 'idle' ? 'bg-green-500 animate-pulse' : 'bg-muted-foreground/30')} />
                 <span className="text-xs text-muted-foreground">RAG Voice Agent</span>
                 <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-4">gpt-4.1</Badge>
+                <Badge variant="secondary" className="text-[10px] py-0 px-1.5 h-4">
+                  {LANGUAGES.find((l) => l.code === selectedLanguage)?.nativeLabel || 'English'}
+                </Badge>
               </div>
               <div className="flex items-center gap-2">
                 <Label htmlFor="sample-toggle" className="text-xs text-muted-foreground cursor-pointer">Sample Data</Label>
@@ -269,6 +275,8 @@ export default function Page() {
                 voiceStatus={voiceStatus}
                 onVoiceStatusChange={setVoiceStatus}
                 onSaveConversation={handleSaveConversation}
+                selectedLanguage={selectedLanguage}
+                selectedLanguageLabel={LANGUAGES.find((l) => l.code === selectedLanguage)?.label || 'English'}
               />
             )}
             {activeScreen === 'history' && (
@@ -287,7 +295,7 @@ export default function Page() {
               <Badge variant="secondary" className="text-[10px] py-0.5 px-2 font-normal">Agent: 69a27fd200b22915dd81e166</Badge>
               <Badge variant="secondary" className="text-[10px] py-0.5 px-2 font-normal">KB: 69a27fc2f572c99c0ffbe5bd</Badge>
             </div>
-            <p className="text-[10px] text-muted-foreground">Voice + Text + Knowledge Base</p>
+            <p className="text-[10px] text-muted-foreground">Voice + Text + Knowledge Base + Multilingual</p>
           </footer>
         </main>
       </div>

@@ -29,6 +29,8 @@ interface ChatScreenProps {
   voiceStatus: string
   onVoiceStatusChange: (status: string) => void
   onSaveConversation: () => void
+  selectedLanguage: string
+  selectedLanguageLabel: string
 }
 
 function WaveformAnimation({ status }: { status: string }) {
@@ -67,7 +69,7 @@ function StatusLabel({ status }: { status: string }) {
   return <p className={cn('text-sm font-medium tracking-[-0.01em]', info.color)}>{info.text}</p>
 }
 
-export default function ChatScreen({ messages, onAddMessage, voiceStatus, onVoiceStatusChange, onSaveConversation }: ChatScreenProps) {
+export default function ChatScreen({ messages, onAddMessage, voiceStatus, onVoiceStatusChange, onSaveConversation, selectedLanguage, selectedLanguageLabel }: ChatScreenProps) {
   const [textInput, setTextInput] = useState('')
   const [sending, setSending] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -247,7 +249,9 @@ export default function ChatScreen({ messages, onAddMessage, voiceStatus, onVoic
     onAddMessage({ id: genId(), role: 'user', text: msg, type: 'text', timestamp: new Date() })
 
     try {
-      const result = await callAIAgent(msg, AGENT_ID)
+      // Prepend language instruction so the agent responds in the selected language
+      const languagePrefix = selectedLanguage !== 'en' ? `[Respond in ${selectedLanguageLabel}] ` : ''
+      const result = await callAIAgent(languagePrefix + msg, AGENT_ID)
       const answer = result?.response?.result?.answer || result?.response?.message || result?.response?.result?.text || 'No response received.'
       const sources = Array.isArray(result?.response?.result?.sources) ? result.response.result.sources : []
       const confidence = result?.response?.result?.confidence || 'medium'
@@ -357,7 +361,7 @@ export default function ChatScreen({ messages, onAddMessage, voiceStatus, onVoic
       <div className="px-6 pb-6">
         <div className="flex items-center gap-2 bg-card/75 backdrop-blur-[16px] border border-white/[0.18] rounded-2xl px-4 py-2 shadow-sm">
           <Input
-            placeholder="Type a message..."
+            placeholder={selectedLanguage !== 'en' ? `Type a message... (${selectedLanguageLabel})` : 'Type a message...'}
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendText() } }}
