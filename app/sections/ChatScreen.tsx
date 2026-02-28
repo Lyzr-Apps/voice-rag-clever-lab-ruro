@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect, useCallback } from 'react'
-import { HiMicrophone, HiStop, HiPaperAirplane, HiSignal } from 'react-icons/hi2'
+import { HiMicrophone, HiStop, HiPaperAirplane, HiSignal, HiLanguage } from 'react-icons/hi2'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -249,8 +249,8 @@ export default function ChatScreen({ messages, onAddMessage, voiceStatus, onVoic
     onAddMessage({ id: genId(), role: 'user', text: msg, type: 'text', timestamp: new Date() })
 
     try {
-      // Prepend language instruction so the agent responds in the selected language
-      const languagePrefix = selectedLanguage !== 'en' ? `[Respond in ${selectedLanguageLabel}] ` : ''
+      // Always prepend language instruction to ensure consistent responses
+      const languagePrefix = `[Respond in ${selectedLanguageLabel}] `
       const result = await callAIAgent(languagePrefix + msg, AGENT_ID)
       const answer = result?.response?.result?.answer || result?.response?.message || result?.response?.result?.text || 'No response received.'
       const sources = Array.isArray(result?.response?.result?.sources) ? result.response.result.sources : []
@@ -304,6 +304,16 @@ export default function ChatScreen({ messages, onAddMessage, voiceStatus, onVoic
         </CardContent>
       </Card>
 
+      {/* Language Banner */}
+      {selectedLanguage !== 'en' && (
+        <div className="mx-6 mb-2 flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/5 border border-primary/10">
+          <HiLanguage className="w-4 h-4 text-primary shrink-0" />
+          <p className="text-xs text-primary/80">
+            Responding in <span className="font-semibold">{selectedLanguageLabel}</span> -- change language from the sidebar
+          </p>
+        </div>
+      )}
+
       {/* Chat Transcript */}
       <div className="flex-1 min-h-0 mx-6 mb-4">
         <ScrollArea className="h-full">
@@ -311,7 +321,12 @@ export default function ChatScreen({ messages, onAddMessage, voiceStatus, onVoic
             {messages.length === 0 && (
               <div className="text-center py-16">
                 <HiSignal className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground">Start a voice session or type a message below</p>
+                <p className="text-sm text-muted-foreground mb-1">Start a voice session or type a message below</p>
+                <p className="text-xs text-muted-foreground/60">
+                  {selectedLanguage !== 'en'
+                    ? `Agent will respond in ${selectedLanguageLabel}`
+                    : 'Select a language from the sidebar for multilingual responses'}
+                </p>
               </div>
             )}
             {messages.map((m) => (
@@ -361,7 +376,7 @@ export default function ChatScreen({ messages, onAddMessage, voiceStatus, onVoic
       <div className="px-6 pb-6">
         <div className="flex items-center gap-2 bg-card/75 backdrop-blur-[16px] border border-white/[0.18] rounded-2xl px-4 py-2 shadow-sm">
           <Input
-            placeholder={selectedLanguage !== 'en' ? `Type a message... (${selectedLanguageLabel})` : 'Type a message...'}
+            placeholder={selectedLanguage !== 'en' ? `Type in any language... (responding in ${selectedLanguageLabel})` : 'Type a message...'}
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendText() } }}

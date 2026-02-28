@@ -255,7 +255,7 @@ export default function Page() {
               <div className="flex items-center gap-2 mr-2">
                 <div className={cn('w-2 h-2 rounded-full', voiceStatus !== 'idle' ? 'bg-green-500 animate-pulse' : 'bg-muted-foreground/30')} />
                 <span className="text-xs text-muted-foreground">RAG Voice Agent</span>
-                <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-4">gpt-4.1</Badge>
+                <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-4">gpt-4.1 multilingual</Badge>
                 <Badge variant="secondary" className="text-[10px] py-0 px-1.5 h-4">
                   {LANGUAGES.find((l) => l.code === selectedLanguage)?.nativeLabel || 'English'}
                 </Badge>
