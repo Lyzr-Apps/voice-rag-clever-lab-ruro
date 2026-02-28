@@ -1,0 +1,8 @@
+{
+  "agent_name": "RAG Voice Agent",
+  "agent_id": "69a27fd200b22915dd81e166",
+  "description": "Answers customer questions by searching the company knowledge base containing documentation, website content, and product catalogs. Responds via voice and text with accurate, contextual answers.",
+  "agent_type": "voice",
+  "accessor": "websocket",
+  "auto_generated": true
+}

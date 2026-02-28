@@ -1,0 +1,14 @@
+{
+  "agents": [
+    {
+      "name": "RAG Voice Agent",
+      "agent_id": "69a27fd200b22915dd81e166",
+      "type": "single",
+      "has_voice": true,
+      "has_knowledge_base": true,
+      "rag_id": "69a27fc2f572c99c0ffbe5bd",
+      "provider": "openai",
+      "model": "gpt-4.1"
+    }
+  ]
+}

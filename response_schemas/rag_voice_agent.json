@@ -1,0 +1,13 @@
+{
+  "agent_name": "RAG Voice Agent",
+  "agent_type": "voice",
+  "accessor": "json",
+  "has_module_outputs": false,
+  "has_voice": true,
+  "has_knowledge_base": true,
+  "response_schema": {
+    "answer": "string - The agent's response to the user query",
+    "sources": "array of strings - List of source documents referenced",
+    "confidence": "string enum (high/medium/low) - Confidence level of the answer"
+  }
+}
